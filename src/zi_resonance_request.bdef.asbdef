@@ -1,0 +1,57 @@
+managed implementation in class zbp_i_resonance_request unique;
+strict ( 2 );
+
+define behavior for ZI_RESONANCE_REQUEST alias Request
+persistent table zrlv_req
+lock master
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) RequestId, LocalCreatedBy, LocalCreatedAt, LocalLastChangedBy, LocalLastChangedAt;
+  field ( readonly ) BurnoutRiskScore;
+
+  association _Allocations { create; }
+
+  mapping for zrlv_req
+  {
+    RequestId           = request_id;
+    EmployeeId           = employee_id;
+    LeaveType             = leave_type;
+    StartDate              = start_date;
+    EndDate                 = end_date;
+    DaysRequested            = days_requested;
+    RequestStatus             = request_status;
+    BurnoutRiskScore           = burnout_risk_score;
+    CoverageStatus              = coverage_status;
+    LocalCreatedBy               = local_created_by;
+    LocalCreatedAt                = local_created_at;
+    LocalLastChangedBy             = local_last_changed_by;
+    LocalLastChangedAt              = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_RESONANCE_ALLOC alias Allocation
+persistent table zrlv_alloc
+lock dependent by _Request
+authorization dependent by _Request
+{
+  update;
+  delete;
+
+  field ( readonly ) AllocId, RequestId, LocalCreatedAt;
+
+  association _Request;
+
+  mapping for zrlv_alloc
+  {
+    AllocId               = alloc_id;
+    RequestId              = request_id;
+    CoveringEmployeeId      = covering_employee_id;
+    AllocStatus              = alloc_status;
+    LocalCreatedAt            = local_created_at;
+  }
+}

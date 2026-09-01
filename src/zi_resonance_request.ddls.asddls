@@ -2,6 +2,8 @@
 @EndUserText.label: 'Resonance Leave - Request Interface'
 define root view entity ZI_RESONANCE_REQUEST
   as select from zrlv_req
+  composition [0..*] of ZI_RESONANCE_ALLOC as _Allocations
+
   association [0..1] to ZI_RESONANCE_EMPLOYEE as _Employee
     on $projection.EmployeeId = _Employee.EmployeeId
   association [0..*] to ZI_RESONANCE_BALANCE   as _Balance
@@ -23,6 +25,7 @@ define root view entity ZI_RESONANCE_REQUEST
       local_last_changed_at       as LocalLastChangedAt,
 
       // Associations
+      _Allocations,
       _Employee,
       _Balance
 }
