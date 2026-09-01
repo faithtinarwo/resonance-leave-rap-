@@ -14,7 +14,10 @@ etag master LocalLastChangedAt
   field ( readonly ) RequestId, LocalCreatedBy, LocalCreatedAt, LocalLastChangedBy, LocalLastChangedAt;
   field ( readonly ) BurnoutRiskScore;
 
+  determination setBurnoutRisk on save { create; }
+
   association _Allocations { create; }
+  association _Employee;
 
   mapping for zrlv_req
   {

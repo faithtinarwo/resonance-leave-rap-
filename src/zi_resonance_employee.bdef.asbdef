@@ -1,0 +1,23 @@
+managed implementation in class zbp_i_resonance_employee unique;
+strict ( 2 );
+
+define behavior for ZI_RESONANCE_EMPLOYEE alias Employee
+persistent table zrlv_emp
+lock master
+authorization master ( instance )
+{
+  mapping for zrlv_emp
+  {
+    EmployeeId          = employee_id;
+    EmployeeName          = employee_name;
+    Department              = department;
+    ManagerId                = manager_id;
+    TeamSkillGroup             = team_skill_group;
+    WorkloadPct                  = workload_pct;
+    HireDate                       = hire_date;
+    LocalCreatedBy                    = local_created_by;
+    LocalCreatedAt                       = local_created_at;
+    LocalLastChangedBy                      = local_last_changed_by;
+    LocalLastChangedAt                         = local_last_changed_at;
+  }
+}
