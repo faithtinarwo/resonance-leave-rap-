@@ -47,6 +47,9 @@ CLASS lhc_Request DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS setBurnoutRisk FOR DETERMINE ON SAVE
       IMPORTING keys FOR Request~setBurnoutRisk.
 
+    METHODS validateDates FOR VALIDATE ON SAVE
+      IMPORTING keys FOR Request~validateDates.
+
     METHODS submit FOR MODIFY
       IMPORTING keys FOR ACTION Request~submit RESULT result.
 
@@ -56,14 +59,39 @@ ENDCLASS.
 
 CLASS lhc_Request IMPLEMENTATION.
 
-  METHOD get_instance_authorizations.
+    METHOD get_instance_authorizations.
 
-    result = VALUE #( FOR ls_key IN keys (
-      %tky           = ls_key-%tky
-      %update        = if_abap_behv=>auth-allowed
-      %delete        = if_abap_behv=>auth-allowed
-      %action-submit = if_abap_behv=>auth-allowed
-    ) ).
+    READ ENTITIES OF ZI_RESONANCE_REQUEST IN LOCAL MODE
+      ENTITY Request
+        FIELDS ( RequestStatus )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(requests).
+
+    LOOP AT keys INTO DATA(ls_key).
+
+      DATA lv_status TYPE zrlv_req-request_status.
+      CLEAR lv_status.
+
+      READ TABLE requests INTO DATA(ls_req)
+        WITH KEY %tky-RequestId = ls_key-%tky-RequestId.
+      IF sy-subrc = 0.
+        lv_status = ls_req-RequestStatus.
+      ENDIF.
+
+      DATA lv_auth TYPE if_abap_behv=>t_char01.
+      IF lv_status = 'D'.
+        lv_auth = if_abap_behv=>auth-allowed.
+      ELSE.
+        lv_auth = if_abap_behv=>auth-unauthorized.
+      ENDIF.
+
+      APPEND VALUE #( %tky           = ls_key-%tky
+                       %update        = lv_auth
+                       %delete        = lv_auth
+                       %action-submit = if_abap_behv=>auth-allowed
+                     ) TO result.
+
+    ENDLOOP.
 
   ENDMETHOD.
 
@@ -255,6 +283,38 @@ CLASS lhc_Request IMPLEMENTATION.
       RESULT DATA(final_requests).
 
     result = VALUE #( FOR r IN final_requests ( %tky = r-%tky %param = r ) ).
+
+  ENDMETHOD.
+
+    METHOD validateDates.
+
+    READ ENTITIES OF ZI_RESONANCE_REQUEST IN LOCAL MODE
+      ENTITY Request
+        FIELDS ( StartDate EndDate DaysRequested )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(requests).
+
+    LOOP AT requests INTO DATA(ls_req).
+
+      IF ls_req-StartDate > ls_req-EndDate.
+        APPEND VALUE #( %tky = ls_req-%tky ) TO failed-request.
+        APPEND VALUE #( %tky = ls_req-%tky
+                         %msg = new_message_with_text(
+                                  severity = if_abap_behv_message=>severity-error
+                                  text     = 'Start date must be before end date' )
+                       ) TO reported-request.
+      ENDIF.
+
+      IF ls_req-DaysRequested <= 0.
+        APPEND VALUE #( %tky = ls_req-%tky ) TO failed-request.
+        APPEND VALUE #( %tky = ls_req-%tky
+                         %msg = new_message_with_text(
+                                  severity = if_abap_behv_message=>severity-error
+                                  text     = 'Days requested must be greater than zero' )
+                       ) TO reported-request.
+      ENDIF.
+
+    ENDLOOP.
 
   ENDMETHOD.
 
