@@ -1,4 +1,4 @@
-managed implementation in class zbp_i_resonance_request unique;
+managed with additional save implementation in class zbp_i_resonance_request unique;
 strict ( 2 );
 
 define behavior for ZI_RESONANCE_REQUEST alias Request
@@ -15,6 +15,8 @@ etag master LocalLastChangedAt
   field ( readonly ) BurnoutRiskScore;
 
   determination setBurnoutRisk on save { create; }
+
+  action submit result [1] $self;
 
   association _Allocations { create; }
   association _Employee;
