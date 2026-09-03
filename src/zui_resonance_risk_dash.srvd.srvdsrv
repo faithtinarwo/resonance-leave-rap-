@@ -1,0 +1,4 @@
+@EndUserText.label: 'Resonance Leave Risk Dashboard Service'
+define service ZUI_RESONANCE_RISK_DASH {
+  expose ZC_RESONANCE_RISK_DASHBOARD as EmployeeRisk;
+}
