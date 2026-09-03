@@ -1,0 +1,14 @@
+projection;
+strict ( 2 );
+
+define behavior for ZC_RESONANCE_REQUEST alias Request
+{
+  use create;
+  use update;
+  use delete;
+
+  use action submit;
+
+  use association _Employee;
+  use association _Allocations;
+}

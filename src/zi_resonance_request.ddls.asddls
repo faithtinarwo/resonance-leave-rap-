@@ -18,6 +18,14 @@ define root view entity ZI_RESONANCE_REQUEST
       days_requested           as DaysRequested,
       request_status            as RequestStatus,
       burnout_risk_score        as BurnoutRiskScore,
+
+      case burnout_risk_score
+        when 3 then 1
+        when 2 then 2
+        when 1 then 3
+        else 0
+      end                        as RiskCriticality,
+
       coverage_status            as CoverageStatus,
       local_created_by            as LocalCreatedBy,
       local_created_at            as LocalCreatedAt,

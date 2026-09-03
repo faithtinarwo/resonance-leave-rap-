@@ -1,0 +1,4 @@
+@EndUserText.label: 'Resonance Leave Service'
+define service ZUI_RESONANCE_REQUEST {
+  expose ZC_RESONANCE_REQUEST as Request;
+}
