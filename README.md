@@ -50,7 +50,17 @@ ZRESONANCE package (BTP ABAP Environment, package ZRESONANCE under ZLOCAL)
 │   └── ZCL_RESONANCE_TEST_RUNNER (console test harness)
 └── ZUI_RESONANCE_REQUEST / ZUI_RESONANCE_REQUEST_O4
     (service definition + OData V4 UI service binding)
-    
+Live apps
+
+Both Fiori Elements apps are generated directly from the RAP business object — no custom UI code, just CDS annotations:
+
+Leave Requests (List Report) — <img width="1906" height="478" alt="image" src="https://github.com/user-attachments/assets/724985e5-fa26-46a5-8315-f67bbf08588d" />
+
+Employee Risk Dashboard <img width="1361" height="629" alt="image" src="https://github.com/user-attachments/assets/e66700c6-0d1b-49c1-bd80-21c99846ff2d" />
+
+
+Both apps are also packaged as IAM Apps (ZIAM_RESONANCE_REQUEST_EXT, ZIAM_RESONANCE_RISK_DASH_EXT) under a shared Business Catalog (ZBC_RESONANCE_LEAVE), so in a production system they'd surface as launchpad tiles under one role assignment. Wiring that final role-collection step needs elevated BTP administrator access that isn't available on a trial account, so for this portfolio build the apps are accessed via their individual preview URLs — but the launchpad-side objects are built, activated, and ready to attach to a role the moment that access exists.
+
 Project status
 Step	Description	Status
 1	Database tables	✓ Complete
@@ -60,7 +70,9 @@ Step	Description	Status
 5	Validation + instance authorization	✓ Complete, verified
 6	Fiori List Report with @UI.criticality	✓ Complete, verified live
 7	Documentation + final polish	✓ This README
+Reflection
 
+The original project's closing line was that the empathy was the specification — that the whole system existed because a real person was struggling and the software managing his employment saw nothing wrong. That's still true here. What's different this time is the platform: RAP's stricter contracts meant every shortcut had to be justified rather than assumed, and every piece of business logic had to prove itself against the framework's own rules before it was allowed to run. If the original project showed the idea works, this one shows the idea holds up — that the human problem behind it wasn't dependent on any one version of ABAP to matter.
 Reflection
 
 The original project's closing line was that the empathy was the specification — that the whole system existed because a real person was struggling and the software managing his employment saw nothing wrong. That's still true here. What's different this time is the platform: RAP's stricter contracts meant every shortcut had to be justified rather than assumed, and every piece of business logic had to prove itself against the framework's own rules before it was allowed to run. If the original project showed the idea works, this one shows the idea holds up — that the human problem behind it wasn't dependent on any one version of ABAP to matter.
